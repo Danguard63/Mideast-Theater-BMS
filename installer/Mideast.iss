@@ -58,7 +58,7 @@ SelectDirBrowseLabel=Make a backup of your Falcon BMS installation before going 
 [Files]
 ; Everything in the theater folder, except test scenarios, backups and reports of the tools.
 Source: "{#SrcDir}\*"; DestDir: "{app}\Data\{#TheaterDir}"; Flags: ignoreversion recursesubdirs createallsubdirs; \
-  Excludes: "\Campaign\Chunma test1.*,\Campaign\Hawk test1.*,\Campaign\Patriot test*,\Campaign\SA* test*,\Campaign\Skyguard test*,\Campaign\Tor HARM test1.*,\Campaign\TASMO *,\Campaign\Auto Save.*,\Campaign\tmp.*,\Campaign\relocated.txt,\Terrdata\Mideast\NewTerrain\Photoreal\backup tiles,\Terrdata\ObjectsNT\FE_Backup,\Terrdata\ObjectsNT\Airbases_leveling.csv,\Terrdata\ObjectsNT\Airbases_relocation.csv,\Uninstall,*.bak,*.orig,*.old"
+  Excludes: "\Campaign\Chunma test1.*,\Campaign\Hawk test1.*,\Campaign\Patriot test*,\Campaign\SA* test*,\Campaign\Skyguard test*,\Campaign\Tor HARM test1.*,\Campaign\TASMO *,\Campaign\Auto Save.*,\Campaign\tmp.*,\Campaign\relocated.txt,\Campaign\dharan.*,\Campaign\The Day of the Jackal new.*,\Terrdata\Mideast\NewTerrain\Photoreal\backup tiles,\Terrdata\ObjectsNT\FE_Backup,\Terrdata\ObjectsNT\Airbases_leveling.csv,\Terrdata\ObjectsNT\Airbases_relocation.csv,\Uninstall,*.bak,*.orig,*.old"
 ; Release notes, credits and terms, next to the theater docs.
 Source: "..\README.md";    DestDir: "{app}\Data\{#TheaterDir}\Docs\Mideast 4.38"; Flags: ignoreversion
 Source: "..\CHANGELOG.md"; DestDir: "{app}\Data\{#TheaterDir}\Docs\Mideast 4.38"; Flags: ignoreversion
@@ -75,7 +75,7 @@ const
   BmsKey = 'SOFTWARE\WOW6432Node\Benchmark Sims\Falcon BMS 4.38';
 
 var
-  OldTheaterMovedTo: String;
+  DeleteOldTheater: Boolean;
 
 function TheaterLst(Dir: String): String;
 begin
@@ -101,8 +101,7 @@ end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
 var
-  Theater, Backup: String;
-  N: Integer;
+  Theater: String;
 begin
   Result := True;
   if CurPageID = wpSelectDir then
@@ -115,20 +114,15 @@ begin
       exit;
     end;
     Theater := AddBackslash(WizardDirValue) + 'Data\{#TheaterDir}';
-    { an older Mideast128 (4.36/4.37) in the same folder: renamed as a backup, never mixed with the new one }
+    { an older Mideast128 (4.36/4.37) in the same folder: it does not work with 4.38, so it is deleted, never mixed with the new one }
+    DeleteOldTheater := False;
     if DirExists(Theater) and not FileExists(Theater + '\Uninstall\unins000.exe') then
     begin
-      Backup := Theater + ' (old)';
-      N := 2;
-      while DirExists(Backup) do
-      begin
-        Backup := Theater + ' (old ' + IntToStr(N) + ')';
-        N := N + 1;
-      end;
       if SuppressibleMsgBox('An older Mideast128 theater is already in' + #13#10 + Theater + #13#10#13#10 +
-                'It will be renamed to' + #13#10 + Backup + #13#10 +
-                'and the new theater installed in its place. Continue?', mbConfirmation, MB_YESNO, IDYES) = IDYES then
-        OldTheaterMovedTo := Backup
+                'It does not work with BMS 4.38 and will be DELETED, with all its files, before the new theater is installed.' + #13#10 +
+                'If you want to keep anything from it (saved campaigns, your own TEs), choose No and copy it elsewhere first.' + #13#10#13#10 +
+                'Delete the older theater and continue?', mbConfirmation, MB_YESNO, IDYES) = IDYES then
+        DeleteOldTheater := True
       else
         Result := False;
     end;
@@ -144,9 +138,12 @@ var
 begin
   if CurStep = ssInstall then
   begin
-    if OldTheaterMovedTo <> '' then
-      if not RenameFile(AddBackslash(WizardDirValue) + 'Data\{#TheaterDir}', OldTheaterMovedTo) then
-        RaiseException('Could not rename the older theater folder. Close BMS and any program using it, then run the installer again.');
+    if DeleteOldTheater then
+    begin
+      WizardForm.StatusLabel.Caption := 'Deleting the older Mideast128 theater...';
+      if not DelTree(AddBackslash(WizardDirValue) + 'Data\{#TheaterDir}', True, True, True) then
+        RaiseException('Could not delete the older theater folder. Close BMS and any program using it, then run the installer again.');
+    end;
   end;
   if CurStep = ssPostInstall then
   begin

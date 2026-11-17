@@ -9,7 +9,7 @@ Before installing:
 
 The installer:
 - copies the theater into <Falcon BMS 4.38>\Data\Add-On Mideast128;
-- renames an older Mideast128 theater in that folder to "Add-On Mideast128 (old)" instead of overwriting it;
+- deletes an older Mideast128 theater (4.36/4.37) in that folder, after asking you: it does not work with 4.38. Copy elsewhere anything you want to keep from it first;
 - adds the theater to Data\TerrData\TheaterDefinition\theater.lst (a copy of the file is kept as theater.lst.before-mideast).
 
 After installing, start BMS, choose "Mideast4_38" in the theater list and restart BMS.

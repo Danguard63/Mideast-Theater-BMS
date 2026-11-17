@@ -27,7 +27,7 @@ The installer comes in several parts (`Mideast-4.38-Setup.exe` plus `.bin` files
 ## Install
 1. **Back up** your Falcon BMS installation, or at least the `Data\Add-On Mideast128` folder if you already have an older Mideast128.
 2. Run `Mideast-4.38-Setup.exe` and choose your Falcon BMS 4.38 folder (normally found automatically).
-3. The installer copies the theater into `Data\Add-On Mideast128` and adds it to `Data\TerrData\TheaterDefinition\theater.lst`. If an older Mideast128 is in that folder, it is first renamed as a backup.
+3. The installer copies the theater into `Data\Add-On Mideast128` and adds it to `Data\TerrData\TheaterDefinition\theater.lst`. If an older Mideast128 (4.36/4.37) is in that folder, the installer asks and then deletes it, since it does not work with 4.38: copy elsewhere anything you want to keep from it first.
 4. Start BMS, choose **Mideast4_38** in the theater list and **restart BMS**, as for any theater change.
 
 To uninstall, use *Apps & features* in Windows (or the uninstaller in the theater folder): it removes the theater files and its line in `theater.lst`.
