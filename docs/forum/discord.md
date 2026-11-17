@@ -8,7 +8,7 @@ The Mideast128 theater by **SpbGoro**, brought to **BMS 4.38 and the New Terrain
 🚀 SAMs, AAA and radars corrected to real-world ranges
 📋 Original campaigns and TEs updated to the new map
 
-📥 Download (installer, ~8 GB in parts): https://github.com/Danguard63/Mideast-Theater-BMS/releases/latest
+📥 Download (installer, ~7.6 GB in parts): https://github.com/Danguard63/Mideast-Theater-BMS/releases/latest
 💬 Forum thread: FORUM_LINK
 
 Huge thanks to SpbGoro and to Benchmark Sims. Check six! ✈️

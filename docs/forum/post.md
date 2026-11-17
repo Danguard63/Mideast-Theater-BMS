@@ -54,7 +54,7 @@ Full changelog: [CHANGELOG.md](https://github.com/Danguard63/Mideast-Theater-BMS
 
 **[Download from GitHub Releases](https://github.com/Danguard63/Mideast-Theater-BMS/releases/latest)**
 
-The installer comes in parts (`Mideast-4.38-Setup.exe` plus `.bin` files, about 8 GB in total):
+The installer comes in parts (`Mideast-4.38-Setup.exe` plus `.bin` files, about 7.6 GB in total):
 1. Download **all the files** into the **same folder**.
 2. Back up your BMS installation.
 3. Run `Mideast-4.38-Setup.exe`: it finds your BMS 4.38 folder, installs the theater into `Data\Add-On Mideast128` and adds it to `theater.lst`.
