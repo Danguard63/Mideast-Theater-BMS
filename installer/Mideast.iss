@@ -159,7 +159,7 @@ begin
           Found := True;
     if not Found then
     begin
-      FileCopy(Lst, Lst + '.before-mideast', False);
+      CopyFile(Lst, Lst + '.before-mideast', False);
       SaveStringToFile(Lst, #13#10 + '{#TdfLine}' + #13#10, True);
     end;
   end;

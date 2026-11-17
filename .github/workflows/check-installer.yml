@@ -27,7 +27,7 @@ jobs:
         shell: pwsh
         run: |
           $exe = Get-ChildItem installer\Output\*.exe | Select-Object -First 1
-          & innoextract --version 2>$null; if ($LASTEXITCODE -ne 0) { choco install innoextract -y --no-progress }
+          if (-not (Get-Command innoextract -ErrorAction SilentlyContinue)) { choco install innoextract -y --no-progress; Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"; refreshenv }
           innoextract -l $exe.FullName | Tee-Object list.txt
           $l = Get-Content list.txt -Raw
           foreach ($bad in "SA-2 test1","SA10 TEST","TASMO VERIFICA","Auto Save","FE_Backup","Airbases_leveling","backup tiles") { if ($l -match [regex]::Escape($bad)) { throw "excluded file is in the installer: $bad" } }
