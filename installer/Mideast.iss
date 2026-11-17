@@ -109,8 +109,8 @@ begin
   begin
     if not IsBmsDir(WizardDirValue) then
     begin
-      MsgBox('This is not a Falcon BMS 4.38 folder:' + #13#10 + WizardDirValue + #13#10#13#10 +
-             'Choose the folder that contains Bin, Data and Launcher.exe.', mbError, MB_OK);
+      SuppressibleMsgBox('This is not a Falcon BMS 4.38 folder:' + #13#10 + WizardDirValue + #13#10#13#10 +
+             'Choose the folder that contains Bin, Data and Launcher.exe.', mbError, MB_OK, IDOK);
       Result := False;
       exit;
     end;
@@ -125,9 +125,9 @@ begin
         Backup := Theater + ' (old ' + IntToStr(N) + ')';
         N := N + 1;
       end;
-      if MsgBox('An older Mideast128 theater is already in' + #13#10 + Theater + #13#10#13#10 +
+      if SuppressibleMsgBox('An older Mideast128 theater is already in' + #13#10 + Theater + #13#10#13#10 +
                 'It will be renamed to' + #13#10 + Backup + #13#10 +
-                'and the new theater installed in its place. Continue?', mbConfirmation, MB_YESNO) = IDYES then
+                'and the new theater installed in its place. Continue?', mbConfirmation, MB_YESNO, IDYES) = IDYES then
         OldTheaterMovedTo := Backup
       else
         Result := False;
