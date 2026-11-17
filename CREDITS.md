@@ -2,11 +2,11 @@
 
 ## The original theater
 This theater is a conversion to Falcon BMS 4.38 and the New Terrain of **Mideast128**, the Middle East theater for BMS 4.36/4.37.
-Its campaigns, objectives, airbases, art and much of its content are the work of its authors:
+Its campaigns, objectives, airbases, art and much of its content are the work of its author:
 
-- **ORIGINAL_AUTHORS** – Mideast128 for BMS 4.36/4.37
+- **SpbGoro** – Mideast128 for BMS 4.36/4.37
 
-A huge thank you to them: without their years of work there would be no Mideast theater to bring to 4.38.
+A huge thank you to SpbGoro: without his years of work there would be no Mideast theater to bring to 4.38.
 
 ## Falcon BMS
 **Benchmark Sims** – Falcon BMS 4.38. The theater uses the BMS 4.38 database, Sim data, 3D models and Korea (KTO) data as its base, as every BMS theater does. Falcon BMS is a free mod for licensed copies of Falcon 4.0, for non-commercial use only.

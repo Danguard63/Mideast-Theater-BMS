@@ -1,6 +1,6 @@
 🌍 **Mideast for Falcon BMS 4.38 – New Terrain is out!** 🌍
 
-The Mideast128 theater by **ORIGINAL_AUTHORS**, brought to **BMS 4.38 and the New Terrain** with the **BMS Suite**:
+The Mideast128 theater by **SpbGoro**, brought to **BMS 4.38 and the New Terrain** with the **BMS Suite**:
 
 🛰️ Photoreal Sentinel-2 terrain and real Copernicus elevation over 2048 × 2048 km
 🛫 141 airbases checked, 117 moved onto their real runways, 51 rebuilt as full 4.38 bases
@@ -11,4 +11,4 @@ The Mideast128 theater by **ORIGINAL_AUTHORS**, brought to **BMS 4.38 and the Ne
 📥 Download (installer, ~8 GB in parts): https://github.com/Danguard63/Mideast-Theater-BMS/releases/latest
 💬 Forum thread: FORUM_LINK
 
-Huge thanks to the original Mideast128 authors and to Benchmark Sims. Check six! ✈️
+Huge thanks to SpbGoro and to Benchmark Sims. Check six! ✈️

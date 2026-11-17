@@ -6,11 +6,11 @@ It's a real pleasure to share with the community **Mideast for BMS 4.38**: the m
 
 ## Credits first
 
-This theater exists thanks to the work of its original authors:
+This theater exists thanks to the work of its original author:
 
-**ORIGINAL_AUTHORS** – Mideast128 for BMS 4.36/4.37
+**SpbGoro** – Mideast128 for BMS 4.36/4.37
 
-Their campaigns, objectives, airbases and art are the heart of this theater. What I did was bring their work to 4.38 and the New Terrain, keeping the original georeference so that everything they built still fits the map. A huge thank you to them, and to **Benchmark Sims** for Falcon BMS 4.38 and Terrain Builder.
+His campaigns, objectives, airbases and art are the heart of this theater. What I did was bring his work to 4.38 and the New Terrain, keeping the original georeference so that everything he built still fits the map. A huge thank you to SpbGoro, and to **Benchmark Sims** for Falcon BMS 4.38 and Terrain Builder.
 
 ## Built with the BMS Suite
 

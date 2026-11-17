@@ -2,7 +2,7 @@
 
 The **Mideast128** theater, brought to **Falcon BMS 4.38** and the **New Terrain**: a 2048 × 2048 km theater over Kuwait, Iraq, Iran, the Persian Gulf, Saudi Arabia and the Gulf states, with photoreal satellite terrain, airbases on their real runways and corrected air defences.
 
-Converted and built with the **[BMS Suite](https://github.com/Danguard63/BMS-suite)**, starting from the work of the original Mideast128 authors (see [CREDITS.md](CREDITS.md)).
+Converted and built with the **[BMS Suite](https://github.com/Danguard63/BMS-suite)**, starting from the work of the original Mideast128 author, SpbGoro (see [CREDITS.md](CREDITS.md)).
 
 ## Highlights
 - **New Terrain:** real elevation (Copernicus DEM) and Sentinel-2 photoreal imagery over the whole theater, with real land cover, forests and coastline.
