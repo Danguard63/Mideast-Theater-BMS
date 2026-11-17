@@ -23,13 +23,28 @@ jobs:
           if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DSrcDir=$env:SRC" installer\Mideast.iss
           if ($LASTEXITCODE -ne 0) { exit 1 }
-      - name: Check what went in
+      - name: Install into a stand-in BMS folder and check
         shell: pwsh
         run: |
-          $exe = Get-ChildItem installer\Output\*.exe | Select-Object -First 1
-          if (-not (Get-Command innoextract -ErrorAction SilentlyContinue)) { choco install innoextract -y --no-progress; Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"; refreshenv }
-          innoextract -l $exe.FullName | Tee-Object list.txt
+          $bms = "$env:RUNNER_TEMP\Falcon BMS 4.38"
+          New-Item -ItemType Directory -Force "$bms\Bin","$bms\Data\TerrData\TheaterDefinition","$bms\Data\Add-On Mideast128\Campaign" | Out-Null
+          "TerrData\TheaterDefinition\Korea KTO.tdf" | Set-Content "$bms\Data\TerrData\TheaterDefinition\theater.lst"
+          "old" | Set-Content "$bms\Data\Add-On Mideast128\Campaign\old437.cam"
+          $exe = (Get-ChildItem installer\Output\*.exe | Select-Object -First 1).FullName
+          Start-Process $exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/DIR=`"$bms`"","/LOG=`"$env:RUNNER_TEMP\setup.log`"" -Wait
+          $t = "$bms\Data\Add-On Mideast128"
+          Get-ChildItem -Recurse $t | ForEach-Object { $_.FullName.Substring($t.Length) } | Tee-Object list.txt
           $l = Get-Content list.txt -Raw
-          foreach ($bad in "SA-2 test1","SA10 TEST","TASMO VERIFICA","Auto Save","FE_Backup","Airbases_leveling","backup tiles") { if ($l -match [regex]::Escape($bad)) { throw "excluded file is in the installer: $bad" } }
-          foreach ($good in "save0.cam","te_new_Nt.tac","Mideast128_NT.tdf","Falcon4_CT.xml","CHANGELOG.md") { if ($l -notmatch [regex]::Escape($good)) { throw "missing from the installer: $good" } }
-          "installer content OK"
+          foreach ($bad in "SA-2 test1","SA10 TEST","TASMO VERIFICA","Auto Save","FE_Backup","Airbases_leveling","backup tiles","old437") { if ($l -match [regex]::Escape($bad)) { throw "should not be installed: $bad" } }
+          foreach ($good in "save0.cam","te_new_Nt.tac","Mideast128_NT.tdf","Falcon4_CT.xml","CHANGELOG.md","unins000.exe") { if ($l -notmatch [regex]::Escape($good)) { throw "missing after install: $good" } }
+          if (-not (Test-Path "$bms\Data\Add-On Mideast128 (old)\Campaign\old437.cam")) { throw "the older theater was not kept as (old)" }
+          $lst = Get-Content "$bms\Data\TerrData\TheaterDefinition\theater.lst" -Raw; $lst
+          if ($lst -notmatch [regex]::Escape("Add-On Mideast128\Terrdata\theaterdefinition\Mideast128_NT.tdf")) { throw "theater.lst not updated" }
+          "install OK"
+          Start-Process "$t\Uninstall\unins000.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART" -Wait
+          Start-Sleep 5
+          $lst = Get-Content "$bms\Data\TerrData\TheaterDefinition\theater.lst" -Raw; $lst
+          if ($lst -match "Mideast128_NT") { throw "theater.lst line not removed by the uninstaller" }
+          if (Test-Path "$t\Campaign\save0.cam") { throw "files left after uninstall" }
+          if (-not (Test-Path "$bms\Data\TerrData\TheaterDefinition\theater.lst")) { throw "theater.lst lost" }
+          "uninstall OK"
