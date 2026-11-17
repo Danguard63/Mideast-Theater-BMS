@@ -25,13 +25,16 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit 1 }
       - name: Install into a stand-in BMS folder and check
         shell: pwsh
+        timeout-minutes: 10
         run: |
           $bms = "$env:RUNNER_TEMP\Falcon BMS 4.38"
           New-Item -ItemType Directory -Force "$bms\Bin","$bms\Data\TerrData\TheaterDefinition","$bms\Data\Add-On Mideast128\Campaign" | Out-Null
           "TerrData\TheaterDefinition\Korea KTO.tdf" | Set-Content "$bms\Data\TerrData\TheaterDefinition\theater.lst"
           "old" | Set-Content "$bms\Data\Add-On Mideast128\Campaign\old437.cam"
           $exe = (Get-ChildItem installer\Output\*.exe | Select-Object -First 1).FullName
-          Start-Process $exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/DIR=`"$bms`"","/LOG=`"$env:RUNNER_TEMP\setup.log`"" -Wait
+          $p = Start-Process $exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/DIR=`"$bms`"","/LOG=`"$env:RUNNER_TEMP\setup.log`"" -PassThru
+          if (-not $p.WaitForExit(240000)) { Get-Content "$env:RUNNER_TEMP\setup.log" -ErrorAction SilentlyContinue | Select-Object -Last 40; Get-Process | Where-Object { $_.Name -like "*Setup*" -or $_.Name -like "is-*" } | Format-Table Name,Id,MainWindowTitle; throw "setup did not finish" }
+          Get-Content "$env:RUNNER_TEMP\setup.log" | Select-Object -Last 15
           $t = "$bms\Data\Add-On Mideast128"
           Get-ChildItem -Recurse $t | ForEach-Object { $_.FullName.Substring($t.Length) } | Tee-Object list.txt
           $l = Get-Content list.txt -Raw
@@ -41,8 +44,9 @@ jobs:
           $lst = Get-Content "$bms\Data\TerrData\TheaterDefinition\theater.lst" -Raw; $lst
           if ($lst -notmatch [regex]::Escape("Add-On Mideast128\Terrdata\theaterdefinition\Mideast128_NT.tdf")) { throw "theater.lst not updated" }
           "install OK"
-          Start-Process "$t\Uninstall\unins000.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART" -Wait
-          Start-Sleep 5
+          $u = Start-Process "$t\Uninstall\unins000.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART" -PassThru
+          if (-not $u.WaitForExit(120000)) { throw "uninstaller did not finish" }
+          Start-Sleep 15
           $lst = Get-Content "$bms\Data\TerrData\TheaterDefinition\theater.lst" -Raw; $lst
           if ($lst -match "Mideast128_NT") { throw "theater.lst line not removed by the uninstaller" }
           if (Test-Path "$t\Campaign\save0.cam") { throw "files left after uninstall" }
