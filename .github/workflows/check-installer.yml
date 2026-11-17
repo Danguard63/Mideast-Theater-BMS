@@ -1,0 +1,35 @@
+# Compiles the installer script against a tiny stand-in theater folder, to catch script errors.
+# The real installer is built on a PC with the theater installed (installer\build-installer.bat).
+name: Check installer script
+on:
+  push:
+    paths: ["installer/**", "*.md", ".github/workflows/check-installer.yml"]
+  workflow_dispatch:
+jobs:
+  compile:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stand-in theater
+        shell: pwsh
+        run: |
+          $t = "$env:RUNNER_TEMP\Add-On Mideast128"
+          foreach ($d in "Campaign","Terrdata\theaterdefinition","Terrdata\ObjectsNT\FE_Backup","Terrdata\Mideast\NewTerrain\Photoreal\backup tiles","NT\Art") { New-Item -ItemType Directory -Force "$t\$d" | Out-Null }
+          foreach ($f in "Campaign\save0.cam","Campaign\SA-2 test1.tac","Campaign\SA10 TEST.tac","Campaign\TASMO VERIFICA.tac","Campaign\Auto Save.cam","Campaign\te_new_Nt.tac","Terrdata\theaterdefinition\Mideast128_NT.tdf","Terrdata\ObjectsNT\FE_Backup\x.XML","Terrdata\ObjectsNT\Airbases_leveling.csv","Terrdata\ObjectsNT\Falcon4_CT.xml","Terrdata\Mideast\NewTerrain\Photoreal\backup tiles\530.dds","NT\Art\a.dds") { Set-Content "$t\$f" "x" }
+          "SRC=$t" | Out-File -Append $env:GITHUB_ENV
+      - name: Compile
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DSrcDir=$env:SRC" installer\Mideast.iss
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+      - name: Check what went in
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem installer\Output\*.exe | Select-Object -First 1
+          & innoextract --version 2>$null; if ($LASTEXITCODE -ne 0) { choco install innoextract -y --no-progress }
+          innoextract -l $exe.FullName | Tee-Object list.txt
+          $l = Get-Content list.txt -Raw
+          foreach ($bad in "SA-2 test1","SA10 TEST","TASMO VERIFICA","Auto Save","FE_Backup","Airbases_leveling","backup tiles") { if ($l -match [regex]::Escape($bad)) { throw "excluded file is in the installer: $bad" } }
+          foreach ($good in "save0.cam","te_new_Nt.tac","Mideast128_NT.tdf","Falcon4_CT.xml","CHANGELOG.md") { if ($l -notmatch [regex]::Escape($good)) { throw "missing from the installer: $good" } }
+          "installer content OK"

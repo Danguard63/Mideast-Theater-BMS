@@ -1,0 +1,15 @@
+Mideast for Falcon BMS 4.38
+
+Before installing:
+
+- Close Falcon BMS.
+- Make a backup of your Falcon BMS installation (at least Data\Add-On Mideast128 if you already have an older Mideast128 theater).
+- You need about 20 GB of free disk space during the installation.
+- All the parts of the installer (Mideast-4.38-Setup.exe and the .bin files) must be in the same folder.
+
+The installer:
+- copies the theater into <Falcon BMS 4.38>\Data\Add-On Mideast128;
+- renames an older Mideast128 theater in that folder to "Add-On Mideast128 (old)" instead of overwriting it;
+- adds the theater to Data\TerrData\TheaterDefinition\theater.lst (a copy of the file is kept as theater.lst.before-mideast).
+
+After installing, start BMS, choose "Mideast4_38" in the theater list and restart BMS.
